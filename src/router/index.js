@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layout/index.vue'
+import store from '@/store/index'
 
 Vue.use(VueRouter)
 
@@ -22,7 +23,10 @@ const routes = [
       {
         path: '/menu',
         name: 'menu',
-        component: () => import(/* webpackChunkName: 'menu' */'@/views/menu/index.vue')
+        component: () => import(/* webpackChunkName: 'menu' */'@/views/menu/index.vue'),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: '/role',
@@ -65,6 +69,26 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+// 全局前置守卫：任何页面的访问都要经过这里
+// to: 要去哪里的路由信息 from：从哪里来的路由信息 next：通行标志
+router.beforeEach((to, from, next) => {
+  console.log('进入了路由拦截器')
+  console.log('to =>', to)
+  console.log('from =>', from)
+  // to.matched是一个数组 匹配路由记录
+  if (to.matched.some(login => login.meta.requiresAuth)) {
+    if (!store.state.user) {
+      next({
+        name: 'login'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

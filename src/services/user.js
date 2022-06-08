@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import qs from 'qs'
+import store from '@/store'
 
 export const login = data => {
   return request({
@@ -11,5 +12,14 @@ export const login = data => {
     // 如果data是qs.stringify(data)转换之后的数据：key=value&key=value
     // 则content-type会被设置成application/x-www-form-urlencoded
     data: qs.stringify(data)
+  })
+}
+export const getUserInfo = () => {
+  return request({
+    method: 'GET',
+    url: '/front/user/getInfo',
+    headers: {
+      Authorization: store.state.user.access_token
+    }
   })
 }

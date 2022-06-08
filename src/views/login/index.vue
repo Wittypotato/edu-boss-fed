@@ -54,11 +54,11 @@ export default {
         if (data.state !== 1) {
           this.$message.error(data.message)
         } else {
-          // 登录成功 记录登录状态到vuex
+          // 记录登录状态到vuex
           this.$store.commit('setUser', data.content)
-          this.$router.push({
-            name: 'home'
-          })
+          // 访问需要登录的页面时 判断有没有登录状态（路由拦截器）
+          // 登录成功 跳转首页
+          this.$router.push(this.$route.query.redirect || '/')
         }
       } catch (error) {
         console.log('登錄失敗', error)

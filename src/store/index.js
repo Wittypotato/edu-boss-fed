@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null // 当前登录用户状态
+    user: JSON.parse(window.localStorage.getItem('user') || 'null')
   },
   getters: {
   },
@@ -13,7 +13,10 @@ export default new Vuex.Store({
   mutations: {
   // payload载荷数据 也就是用户传的数据
     setUser(state, payload) {
-      state.user = Json.parse(payload)
+      state.user = JSON.parse(payload)
+      // 为了防止页面刷新数据丢失，user数据持久化
+      // 本地存储只能存字符串
+      window.localStorage.setItem('user', payload)
     }
   },
   actions: {
